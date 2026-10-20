@@ -1,0 +1,94 @@
+.history-view {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: left;
+}
+
+.history-view h1 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.history-day {
+  margin-bottom: 1.5rem;
+}
+
+.history-day-header {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+}
+
+.history-day-note {
+  border: 1.5px solid #2563eb;
+  background: transparent;
+  color: #2563eb;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  white-space: pre-wrap;
+}
+
+.history-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.history-log-entry {
+  border: 1px solid #e4e2de;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  background: #fff;
+}
+
+.history-log-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.history-log-task {
+  font-weight: 600;
+}
+
+.history-log-time {
+  flex: none;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.history-log-note {
+  margin-top: 0.2rem;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.history-log-meta {
+  margin-top: 0.3rem;
+  display: flex;
+  gap: 0.8rem;
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.history-load-more {
+  display: block;
+  margin: 1rem auto 0;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.4rem 1.2rem;
+  cursor: pointer;
+}
+
+.history-load-more:disabled {
+  opacity: 0.6;
+  cursor: default;
+}

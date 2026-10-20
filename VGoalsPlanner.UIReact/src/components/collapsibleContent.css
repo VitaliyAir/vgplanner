@@ -1,0 +1,27 @@
+.collapsible-body {
+  overflow: hidden;
+}
+
+.collapsible-body--clamped {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 1.4em), transparent);
+}
+
+.collapsible-toggle {
+  display: block;
+  margin: 0.1rem auto 0;
+  width: 2.2rem;
+  height: 1rem;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: #f3f4f6;
+  color: #6b7280;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.collapsible-toggle:hover {
+  background: #e5e7eb;
+}

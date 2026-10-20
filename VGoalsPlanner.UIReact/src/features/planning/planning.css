@@ -1,0 +1,962 @@
+.planning-view {
+  max-width: 1900px;
+  margin: 0 100px 0 100px;
+  padding: 2rem 1rem;
+  text-align: left;
+}
+
+/* Слева — список планирования, справа — колонка "Активные задачи"; на узком окне колонка уходит под список. */
+.planning-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.planning-main {
+  flex: 1 1 640px;
+  max-width: 928px;
+  min-width: 0;
+}
+
+.active-tasks-section.planning-active-tasks {
+  flex: 0 0 900px;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.75rem;
+  border: 1.5px solid #e4e2de;
+  border-radius: 10px;
+  background: #fafafa;
+  color: #1f2937;
+}
+
+.active-tasks-section.planning-active-tasks h2 {
+  font-size: 1.02rem;
+}
+
+.planning-active-tasks .active-task-title {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.planning-active-tasks .active-task-description {
+  font-size: 1.02rem;
+  color: #374151;
+}
+
+.planning-active-tasks .md-view {
+  font-size: 1.08rem;
+}
+
+.planning-active-tasks .recent-task-breadcrumb {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.active-task-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.active-task-actions {
+  flex: none;
+  display: flex;
+  gap: 0.25rem;
+}
+
+.icon-button.active-task-btn--edit {
+  color: #6b7280;
+}
+
+.icon-button.active-task-btn--log {
+  color: #92400e;
+}
+
+/* ---- toolbar ---- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.toolbar-btn {
+  border: 1px solid #e4e2de;
+  background: #fff;
+  color: #1f2328;
+  border-radius: 6px;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.toolbar-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.toolbar-nav button {
+  width: 26px;
+  height: 26px;
+  border: 1px solid #e4e2de;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #1f2328;
+}
+
+.toolbar-label {
+  font-weight: 600;
+  margin: 0 6px;
+  min-width: 160px;
+}
+
+.scale-switch {
+  margin-left: auto;
+  display: flex;
+  border: 1px solid #e4e2de;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.scale-switch button {
+  border: none;
+  background: #fff;
+  color: #6b7280;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  border-left: 1px solid #e4e2de;
+}
+
+.scale-switch button:first-child {
+  border-left: none;
+}
+
+.scale-switch button.active {
+  background: #166534;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ---- shared: task row inside a day tile ---- */
+.day-task {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  padding: 1px 4px;
+  border-radius: 4px;
+  border-left: 3px solid transparent;
+  background: var(--task-bg, #fff);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.t-breadcrumb {
+  flex-basis: 100%;
+  font-size: 0.65rem;
+  color: #888;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Переключатель "Активна" */
+.task-active-switch {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.task-active-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.task-active-switch-track {
+  position: relative;
+  width: 20px;
+  height: 11px;
+  border-radius: 999px;
+  background: #d1d5db;
+  transition: background 0.15s;
+}
+
+.task-active-switch-track::after {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.15s;
+}
+
+.task-active-switch input:checked + .task-active-switch-track {
+  background: #22c55e;
+}
+
+.task-active-switch input:checked + .task-active-switch-track::after {
+  transform: translateX(9px);
+}
+
+.task-active-switch input:focus-visible + .task-active-switch-track {
+  outline: 2px solid #93c5fd;
+  outline-offset: 1px;
+}
+
+.task-active-switch input:disabled + .task-active-switch-track {
+  opacity: 0.5;
+}
+
+.day-scale-tile .task-active-switch {
+  font-size: 0.75rem;
+}
+
+.day-scale-tile .day-task:not(:last-child),
+.week-tile .day-task:not(:last-child) {
+  border-bottom: 1px solid #dbe6f5;
+  padding-bottom: 4px;
+  margin-bottom: 2px;
+}
+
+.day-task .t-title {
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.day-task .t-actions {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  opacity: 0.75;
+}
+
+.day-task .t-actions button {
+  width: 14px;
+  height: 14px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.day-task .t-actions button.danger {
+  color: #dc2626;
+}
+
+.day-task .t-actions button.task-log-btn {
+  color: #92400e;
+}
+
+/* День и неделя: длинное название переносится (строка выше), элементы слева остаются на месте. */
+.day-scale-tile .day-task,
+.week-tile .day-task {
+  align-items: flex-start;
+}
+
+.day-scale-tile .day-task .t-title,
+.week-tile .day-task .t-title {
+  flex: 1 1 0;
+  min-width: 0;
+  margin-left: 26px;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+}
+
+.week-tile .day-task {
+  padding-top: 10px;
+}
+
+/* Нижняя строка: статус и переключатель "Активна" (как .node-foot у задач дерева). */
+.day-task .t-foot {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+}
+
+/* Управление порядком — слева в строке задачи (как в дереве целей). */
+.day-task .t-order {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0.75;
+}
+
+.t-order .position-input {
+  width: 1.5rem;
+  height: 1rem;
+  font-size: 0.65rem;
+}
+
+.day-scale-tile .t-order .position-input {
+  width: 1.9rem;
+  height: 1.1rem;
+  font-size: 0.7rem;
+}
+
+.day-task.has-log {
+  border-bottom: 2px solid #2563eb;
+  border-left: 4px solid #2563eb;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.18);
+}
+
+/* Активная задача — зелёная рамка и более насыщенный зелёный фон (перекрывает фон по статусу). */
+.day-task.day-task--active {
+  --task-bg: #d3f0dc;
+  outline: 1px solid #86efac;
+  outline-offset: -1px;
+}
+
+/* ---- day note ---- */
+.day-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.header-add-btns {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.header-add-btn {
+  border: 1.5px solid;
+  background: transparent;
+  border-radius: 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  cursor: pointer;
+}
+
+.header-add-btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.header-add-btn.note {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.header-add-btn.task {
+  border-color: #15803d;
+  color: #15803d;
+}
+
+.header-add-btn.alert {
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.notification-toggle-btn {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #dc2626;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.notification-toggle-btn.active {
+  background: #dc2626;
+  color: #fff;
+}
+
+.day-note-divider {
+  border-top: 1px solid #e4e2de;
+  margin: 2px 0 4px;
+}
+
+.day-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  border: 1.5px solid #2563eb;
+  background: transparent;
+  color: #2563eb;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 0.72rem;
+  margin-bottom: 4px;
+}
+
+.day-note-text {
+  flex: 1 1 auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.day-note-actions {
+  flex: none;
+  display: flex;
+  gap: 3px;
+}
+
+.day-note-actions button {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  color: #2563eb;
+  font-size: 0.72rem;
+}
+
+/* ---- notebook paper texture ---- */
+.paper {
+  background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 20px, #dbe6f5 21px);
+  background-position: 0 34px;
+  position: relative;
+}
+
+.paper::before {
+  content: '';
+  position: absolute;
+  left: 34px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #f3b8bd;
+}
+
+.fold {
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+}
+
+.fold::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 22px 22px 0;
+  border-color: transparent #f6f5f3 transparent transparent;
+  filter: drop-shadow(-1px 1px 1px rgba(0, 0, 0, 0.15));
+}
+
+/* ---- DAY scale ---- */
+.day-scale-wrap {
+  display: flex;
+}
+
+.day-scale-tile {
+  width: 100%;
+  max-width: 520px;
+  min-height: 380px;
+  border: 1.5px solid #e4e2de;
+  border-radius: 10px;
+  background: #fff;
+  padding: 14px 16px 16px 44px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.day-scale-tile.weekend {
+  background: #fdf2f2;
+}
+
+.day-scale-tile .day-num {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.day-scale-tile .day-dow {
+  color: #6b7280;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.day-scale-tile .header-add-btn {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+}
+
+.day-scale-tile .notification-toggle-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 0.9rem;
+}
+
+
+.day-scale-tile .day-task {
+  font-size: 0.85rem;
+  padding: 10px 6px 3px;
+}
+
+.day-scale-tile .day-task .t-actions button {
+  width: 18px;
+  height: 18px;
+}
+
+/* ---- WEEK scale ---- */
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.week-tile {
+  border: 1.5px solid #e4e2de;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 8px 8px 20px;
+  min-height: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.week-tile.today {
+  border-color: #166534;
+  border-width: 2px;
+}
+
+.week-tile.weekend {
+  background: #fdf2f2;
+}
+
+.week-tile::before {
+  left: 12px;
+}
+
+.week-tile .day-num {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.week-tile .day-dow {
+  font-size: 0.68rem;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+/* ---- MONTH scale ---- */
+.month-dow-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.month-dow-row span {
+  font-size: 0.68rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.month-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.month-tile {
+  border: 1px solid #e4e2de;
+  border-radius: 6px;
+  background: #fff;
+  padding: 3px 4px;
+  min-height: 74px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.month-tile.today {
+  border-color: #166534;
+  border-width: 2px;
+}
+
+.month-tile.weekend {
+  background: #fdf2f2;
+}
+
+.month-tile.outside {
+  background: #f6f5f3;
+  opacity: 0.55;
+}
+
+.month-tile .day-num {
+  font-size: 0.72rem;
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+
+.month-tile .day-task {
+  font-size: 0.6rem;
+  padding: 0 3px;
+  border-left-width: 2px;
+}
+
+.month-tile .notification-toggle-btn {
+  width: 12px;
+  height: 12px;
+  font-size: 0.55rem;
+  border-width: 1px;
+}
+
+
+/* ---- task picker ---- */
+.task-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.task-picker-search {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-picker-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.task-picker-item {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e4e2de;
+  background: #fff;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.task-picker-item:hover {
+  background: #f5f5f5;
+}
+
+.task-picker-item-title {
+  font-weight: 600;
+}
+
+.task-picker-item-meta {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+/* ---- note editor ---- */
+.note-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.note-editor-textarea {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.note-editor-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* ---- task log modal ---- */
+.task-log-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.task-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 40vh;
+  overflow-y: auto;
+}
+
+.task-log-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  border: 1px solid #e4e2de;
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+
+.task-log-entry-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.85rem;
+  word-break: break-word;
+}
+
+.task-log-entry-edit {
+  flex: none;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.task-log-edit {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.task-log-edit input,
+.task-log-edit select {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-log-entry-edit.danger {
+  color: #dc2626;
+}
+
+.notification-completed {
+  flex: none;
+  display: flex;
+  align-items: center;
+}
+
+.task-log-edit-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.task-log-add {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  border-top: 1px solid #e4e2de;
+  padding-top: 0.6rem;
+}
+
+.task-log-add > input,
+.task-log-add select {
+  font: inherit;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-log-add-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.task-log-add-row input {
+  width: 80px;
+  font: inherit;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.task-log-add-row input[type='datetime-local'] {
+  width: auto;
+  flex: 1 1 auto;
+}
+
+.task-log-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.task-log-status-current {
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+/* ---- day notifications panel (right side, "!" toggle) ---- */
+.day-notifications-panel {
+  position: fixed;
+  top: 260px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 280px;
+  max-height: calc(100vh - 280px);
+  overflow-y: auto;
+}
+
+.day-notifications-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  color: #991b1b;
+  font-size: 0.85rem;
+}
+
+.day-notifications-panel-header button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #991b1b;
+  font-size: 0.9rem;
+}
+
+.day-notification-card {
+  border-radius: 12px;
+  border: 1.5px solid #dc2626;
+  background: #fff5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.day-notification-card.editable {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.day-notification-title {
+  font-weight: 700;
+  color: #991b1b;
+}
+
+.day-notification-card.editable .day-notification-title {
+  color: #1e3a8a;
+}
+
+.day-notification-description {
+  font-size: 0.85rem;
+  color: #78716c;
+}
+
+.day-notification-deadline {
+  font-size: 0.78rem;
+  color: #b91c1c;
+}
+
+.day-notification-card.editable .day-notification-deadline {
+  color: #1d4ed8;
+}
+
+.day-notification-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.day-notification-actions button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #1e3a8a;
+  font-size: 0.85rem;
+}
+
+.day-notification-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.day-notification-edit input,
+.day-notification-edit textarea {
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.day-notification-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.day-notification-edit-actions button {
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.25rem 0.7rem;
+  cursor: pointer;
+}
+
+.day-notification-edit-actions button:last-child {
+  background: #9ca3af;
+}
+
+.t-recurring {
+  margin-right: 0.3em;
+  color: #2563eb;
+  font-weight: 700;
+}

@@ -1,0 +1,13 @@
+.priority-flag {
+  position: absolute;
+  top: 0;
+  left: 0.9rem;
+  z-index: 1;
+}
+
+.priority-flag--inline {
+  position: static;
+  flex: none;
+  width: 11px;
+  height: 6px;
+}

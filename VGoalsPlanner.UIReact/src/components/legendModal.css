@@ -1,0 +1,46 @@
+.legend-section h3 {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+}
+
+.legend-section + .legend-section {
+  margin-top: 1rem;
+}
+
+.legend-note {
+  margin: 0 0 0.6rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.legend-row .priority-flag {
+  position: static;
+  flex: none;
+  width: 20px;
+  height: 11px;
+}
+
+.legend-name {
+  font-weight: 600;
+  min-width: 6rem;
+}
+
+.legend-color {
+  color: #6b7280;
+  font-size: 0.85rem;
+}

@@ -1,0 +1,19 @@
+.task-status-icon {
+  flex: none;
+  vertical-align: middle;
+}
+
+.pill .task-status-icon {
+  margin-right: 0.3em;
+  vertical-align: -3px;
+}
+
+.status-select-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.status-select-row select {
+  flex: 1 1 auto;
+}

@@ -1,0 +1,15 @@
+.task-bg-inprogress {
+  --task-bg: #f1faf4;
+}
+
+.task-bg-completed {
+  --task-bg: #f1f7fd;
+}
+
+.task-bg-onhold {
+  --task-bg: #fffbe8;
+}
+
+.task-bg-cancelled {
+  --task-bg: #f4f5f7;
+}

@@ -1,0 +1,50 @@
+.app-tabs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  border-bottom: 1px solid #e4e2de;
+  padding: 0 1rem;
+}
+
+.app-tabs-list {
+  grid-column: 2;
+  display: flex;
+  gap: 4px;
+}
+
+.app-tabs button {
+  border: none;
+  background: transparent;
+  padding: 0.7rem 1rem;
+  font: inherit;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.app-tabs button.active {
+  color: #166534;
+  border-bottom-color: #166534;
+}
+
+.app-user {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.app-tabs .app-user button {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+}
+
+.app-tab-panel.hidden {
+  display: none;
+}

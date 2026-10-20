@@ -1,0 +1,42 @@
+.notification-alerts {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 280px;
+}
+
+.notification-alert-card {
+  border-radius: 12px;
+  border: 1.5px solid #d97706;
+  background: #fffbeb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.notification-alert-title {
+  font-weight: 700;
+  color: #92400e;
+}
+
+.notification-alert-description {
+  font-size: 0.85rem;
+  color: #78716c;
+}
+
+.notification-alert-ok {
+  align-self: flex-end;
+  border: none;
+  background: #d97706;
+  color: #fff;
+  border-radius: 6px;
+  padding: 0.3rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+}

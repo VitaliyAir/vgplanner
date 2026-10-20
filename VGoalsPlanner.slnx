@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Readme.md" />
+    <File Path="UseCases.md" />
+  </Folder>
+  <Project Path="D:/Family/Developer/VGoalsPlanner/VGoalsPlanner.API/VGoalsPlanner.API.csproj" Id="a11b7992-cbe9-4e34-b960-97d32be3c3e7" />
+  <Project Path="D:/Family/Developer/VGoalsPlanner/VGoalsPlanner.Application/VGoalsPlanner.Application.csproj" />
+  <Project Path="D:/Family/Developer/VGoalsPlanner/VGoalsPlanner.Domain/VGoalsPlanner.Domain.csproj" />
+  <Project Path="D:/Family/Developer/VGoalsPlanner/VGoalsPlanner.Infrastructure/VGoalsPlanner.Infrastructure.csproj" />
+</Solution>

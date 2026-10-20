@@ -1,0 +1,60 @@
+.task-attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.task-attachments-empty {
+  margin: 0;
+  color: #9ca3af;
+  font-size: 0.85rem;
+}
+
+.task-attachments-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.task-attachment {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #e4e2de;
+  border-radius: 6px;
+}
+
+.task-attachment-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-size: 0.85rem;
+  text-align: left;
+  color: #2563eb;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-attachment-name:hover {
+  text-decoration: underline;
+}
+
+.task-attachment-meta {
+  flex: none;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.task-attachments-actions {
+  display: flex;
+}

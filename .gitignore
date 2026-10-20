@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# Local secrets / configuration (never commit)
+secrets.json
+*.pfx
+*.pem
+*.key
+appsettings.Local.json
+
+# OS
+Thumbs.db
+.DS_Store

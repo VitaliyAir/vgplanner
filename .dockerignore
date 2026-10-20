@@ -1,0 +1,9 @@
+# Контекст сборки VGoalsPlanner.API/Dockerfile (папка решения): нужны только проекты API.
+**/bin/
+**/obj/
+**/logs/
+**/node_modules/
+.vs/
+.git/
+scripts/
+VGoalsPlanner.UIReact/
