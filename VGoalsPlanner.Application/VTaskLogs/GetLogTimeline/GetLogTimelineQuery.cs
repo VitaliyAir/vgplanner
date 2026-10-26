@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using VGoalsPlanner.Application.Abstractions.Data;
 using VGoalsPlanner.Application.Abstractions.Messaging;
 using VGoalsPlanner.Application.Abstractions.Services;
+using VGoalsPlanner.Application.Statistics;
 using VGoalsPlanner.Application.VTaskLogs.Common;
 using VGoalsPlanner.Domain.Abstractions;
 
@@ -89,18 +90,29 @@ namespace VGoalsPlanner.Application.VTaskLogs
                         })
                         .ToList());
 
+            var snapshotsByDate = (await _context.DayStatistics.AsNoTracking()
+                    .Where(s => s.UserId == _currentUser.UserId && s.Date >= startDate && s.Date <= request.EndDate)
+                    .ToListAsync(cancellationToken))
+                .ToDictionary(s => s.Date, StatisticsReader.FromSnapshot);
+
             var result = days
-                .Where(d => !string.IsNullOrEmpty(d.SpecialNote) || logsByDayId.ContainsKey(d.Id))
-                .OrderByDescending(d => d.Date)
+                .Where(d => !string.IsNullOrEmpty(d.SpecialNote) || logsByDayId.ContainsKey(d.Id) || snapshotsByDate.ContainsKey(d.Date))
                 .Select(d => new TimelineDayResponse
                 {
                     Date = d.Date,
                     SpecialNote = d.SpecialNote,
-                    Logs = logsByDayId.TryGetValue(d.Id, out var list) ? list : Array.Empty<TimelineLogEntryResponse>()
+                    Logs = logsByDayId.TryGetValue(d.Id, out var list) ? list : Array.Empty<TimelineLogEntryResponse>(),
+                    Statistics = snapshotsByDate.GetValueOrDefault(d.Date)
                 })
                 .ToList();
 
-            return result;
+            // Дата со снимком, но без строки VDay (дня никто не открывал) тоже попадает в ленту.
+            var knownDates = days.Select(d => d.Date).ToHashSet();
+            result.AddRange(snapshotsByDate
+                .Where(s => !knownDates.Contains(s.Key))
+                .Select(s => new TimelineDayResponse { Date = s.Key, Statistics = s.Value }));
+
+            return result.OrderByDescending(d => d.Date).ToList();
         }
     }
 }

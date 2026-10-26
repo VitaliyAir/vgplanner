@@ -109,6 +109,57 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database.Migrations
                     b.ToTable("VDays", (string)null);
                 });
 
+            modelBuilder.Entity("VGoalsPlanner.Domain.Entities.VDayStatistics", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("GoalsTotal")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TasksCancelled")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TasksCompleted")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TasksInProgress")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TasksNew")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TasksOnHold")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Date")
+                        .IsUnique()
+                        .HasDatabaseName("IX_VDayStatistics_UserId_Date");
+
+                    b.ToTable("VDayStatistics", (string)null);
+                });
+
             modelBuilder.Entity("VGoalsPlanner.Domain.Entities.VDayVTask", b =>
                 {
                     b.Property<Guid>("VDayId")
@@ -516,6 +567,17 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database.Migrations
                 {
                     b.HasOne("VGoalsPlanner.Domain.Entities.VUser", "User")
                         .WithMany("Days")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("VGoalsPlanner.Domain.Entities.VDayStatistics", b =>
+                {
+                    b.HasOne("VGoalsPlanner.Domain.Entities.VUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

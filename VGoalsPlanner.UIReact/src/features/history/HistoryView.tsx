@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { getLogTimeline } from '../../api/taskLogsApi'
 import { ApiError } from '../../api/httpClient'
-import type { TimelineDay } from '../../api/types'
+import type { Statistics, TimelineDay, VTaskStatus } from '../../api/types'
 import { CollapsibleContent } from '../../components/CollapsibleContent'
 import { MarkdownView } from '../../components/MarkdownView'
+import { TaskStatusIcon } from '../../components/TaskStatusIcon'
 import { TASK_STATUS_LABEL } from '../goals-tree/labels'
 import { formatDayLabel, toIsoDate } from '../planning/planningDates'
 import './history.css'
@@ -16,6 +17,27 @@ function parseIsoDate(iso: string): Date {
 }
 
 const TIME_FMT = new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' })
+
+// Снимок статистики на конец дня: цели, задачи и задачи по статусам.
+function DayStatisticsRow({ stats }: { stats: Statistics }) {
+  return (
+    <div className="history-day-stats" title="Снимок статистики на конец дня">
+      <span className="history-day-stats-title">📊 Статистика на конец дня</span>
+      <span>
+        Цели: <b>{stats.goals.total}</b>
+      </span>
+      <span>
+        Задачи: <b>{stats.tasks.total}</b>
+      </span>
+      {stats.tasks.byStatus.map((item) => (
+        <span key={item.status} className="history-day-stats-item">
+          <TaskStatusIcon status={item.status as VTaskStatus} size={14} /> {TASK_STATUS_LABEL[item.status as VTaskStatus]}{' '}
+          <b>{item.count}</b>
+        </span>
+      ))}
+    </div>
+  )
+}
 
 export function HistoryView() {
   const [days, setDays] = useState<TimelineDay[]>([])
@@ -95,6 +117,8 @@ export function HistoryView() {
               ))}
             </ul>
           )}
+
+          {day.statistics && <DayStatisticsRow stats={day.statistics} />}
         </section>
       ))}
 

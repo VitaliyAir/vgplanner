@@ -78,6 +78,30 @@
   color: #374151;
 }
 
+/* Снимок статистики на конец дня */
+.history-day-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.9rem;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+.history-day-stats-title {
+  font-weight: 600;
+}
+
+.history-day-stats-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .history-load-more {
   display: block;
   margin: 1rem auto 0;

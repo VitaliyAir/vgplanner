@@ -242,8 +242,30 @@
 }
 
 .day-cell--assigned {
-  border-color: #86efac;
-  background: #f0fdf4;
+  border-color: #16a34a;
+  background: #bbf7d0;
+  font-weight: 600;
+}
+
+.day-cell:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Прошедшие дни: видны (назначенные остаются заметны), но недоступны */
+.day-cell--past:disabled {
+  cursor: not-allowed;
+  background: #f6f5f3;
+}
+
+.day-cell--past.day-cell--assigned:disabled {
+  background: #d9f2e2;
+}
+
+.assign-day-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #888;
 }
 
 .goal-picker-breadcrumb {

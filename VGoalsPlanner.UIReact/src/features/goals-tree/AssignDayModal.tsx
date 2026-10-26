@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { getMonthSchedule } from '../../api/vdaysApi'
+import { ApiError } from '../../api/httpClient'
+import { getMonthSchedule, scheduleTask, unscheduleTask } from '../../api/vdaysApi'
 import { Modal } from '../../components/Modal'
 import { addMonths, formatMonthLabel, monthGridDates, toIsoDate } from '../planning/planningDates'
 
@@ -7,13 +8,16 @@ const MONTH_DOW_LABELS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'
 
 interface AssignDayModalProps {
   taskId: string
-  onPick: (isoDate: string) => void
+  // Вызывается после каждого успешного назначения/снятия — родитель может обновить свои данные.
+  onChanged?: () => void
   onCancel: () => void
 }
 
-export function AssignDayModal({ taskId, onPick, onCancel }: AssignDayModalProps) {
+export function AssignDayModal({ taskId, onChanged, onCancel }: AssignDayModalProps) {
   const [viewMonth, setViewMonth] = useState(() => new Date())
   const [assignedDates, setAssignedDates] = useState<Set<string>>(new Set())
+  const [pendingIso, setPendingIso] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const today = new Date()
   const todayIso = toIsoDate(today)
 
@@ -36,6 +40,40 @@ export function AssignDayModal({ taskId, onPick, onCancel }: AssignDayModalProps
       cancelled = true
     }
   }, [viewMonth, taskId])
+
+  // Клик по дню: не назначена — назначаем, назначена — снимаем; окно остаётся открытым.
+  const toggleDay = async (iso: string) => {
+    // Прошедшие дни менять нельзя (ISO-даты yyyy-MM-dd сравниваются как строки).
+    if (pendingIso || iso < todayIso) {
+      return
+    }
+    const wasAssigned = assignedDates.has(iso)
+    setPendingIso(iso)
+    setError(null)
+    try {
+      if (wasAssigned) {
+        await unscheduleTask(iso, taskId)
+      } else {
+        await scheduleTask(iso, taskId)
+      }
+      setAssignedDates((prev) => {
+        const next = new Set(prev)
+        if (wasAssigned) {
+          next.delete(iso)
+        } else {
+          next.add(iso)
+        }
+        return next
+      })
+      onChanged?.()
+    } catch (err) {
+      setError(
+        err instanceof ApiError ? err.message : wasAssigned ? 'Не удалось снять задачу с дня' : 'Не удалось назначить задачу на день',
+      )
+    } finally {
+      setPendingIso(null)
+    }
+  }
 
   const dates = monthGridDates(viewMonth.getFullYear(), viewMonth.getMonth() + 1)
 
@@ -64,19 +102,26 @@ export function AssignDayModal({ taskId, onPick, onCancel }: AssignDayModalProps
             const muted = date.getMonth() !== viewMonth.getMonth()
             const isToday = iso === todayIso
             const isAssigned = assignedDates.has(iso)
+            const isPast = iso < todayIso
 
             return (
               <button
                 key={iso}
                 type="button"
-                className={`day-cell${muted ? ' day-cell--muted' : ''}${isToday ? ' day-cell--today' : ''}${isAssigned ? ' day-cell--assigned' : ''}`}
-                onClick={() => onPick(iso)}
+                disabled={pendingIso !== null || isPast}
+                className={`day-cell${muted ? ' day-cell--muted' : ''}${isToday ? ' day-cell--today' : ''}${isAssigned ? ' day-cell--assigned' : ''}${isPast ? ' day-cell--past' : ''}`}
+                // Дни соседних месяцев: известны назначенные дни только видимого месяца, поэтому клик переключает месяц, а не назначает.
+                onClick={() => (muted ? setViewMonth(date) : void toggleDay(iso))}
               >
                 {date.getDate()}
               </button>
             )
           })}
         </div>
+
+        <p className="assign-day-hint">Нажмите на день, чтобы назначить задачу; ещё раз — чтобы убрать. Прошедшие дни изменить нельзя.</p>
+
+        {error && <p className="tree-error tree-error--inline">{error}</p>}
       </div>
     </Modal>
   )

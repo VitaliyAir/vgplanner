@@ -1,0 +1,54 @@
+.statistics-view {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  text-align: left;
+}
+
+.statistics-view h1 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.stats-table-wrap {
+  overflow-x: auto;
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.stats-table th,
+.stats-table td {
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid #e4e2de;
+  white-space: nowrap;
+}
+
+.stats-table th {
+  text-align: right;
+  font-weight: 600;
+  color: #374151;
+}
+
+.stats-table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats-table th:first-child,
+.stats-table td:first-child {
+  text-align: left;
+}
+
+.stats-table th svg {
+  vertical-align: -2px;
+}
+
+/* Строка "Сейчас" — текущие числа, не снимок */
+.stats-table-now td {
+  background: #f0fdf4;
+  font-weight: 700;
+}

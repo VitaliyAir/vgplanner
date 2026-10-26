@@ -15,6 +15,7 @@ namespace VGoalsPlanner.Application.Abstractions.Data
         DbSet<VDayVTask> DayTasks { get; }
         DbSet<VTaskLog> TaskLogs { get; }
         DbSet<VTaskAttachment> TaskAttachments { get; }
+        DbSet<VDayStatistics> DayStatistics { get; }
         DbSet<AuditLog> AuditLogs { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);

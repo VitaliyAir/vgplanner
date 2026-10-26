@@ -18,6 +18,7 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database
         public DbSet<VDayVTask> DayTasks { get; set; }
         public DbSet<VTaskLog> TaskLogs { get; set; }
         public DbSet<VTaskAttachment> TaskAttachments { get; set; }
+        public DbSet<VDayStatistics> DayStatistics { get; set; }
 
 
         private readonly ICurrentUserService _currentUser;
@@ -44,6 +45,7 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database
             modelBuilder.ApplyConfiguration(new VNotificationConfiguration());
             modelBuilder.ApplyConfiguration(new VTaskLogConfiguration());
             modelBuilder.ApplyConfiguration(new VTaskAttachmentConfiguration());
+            modelBuilder.ApplyConfiguration(new VDayStatisticsConfiguration());
             modelBuilder.ApplyConfiguration(new VUserConfiguration());
         }
 

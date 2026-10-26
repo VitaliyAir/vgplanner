@@ -32,6 +32,7 @@ interface DayTileProps {
   onToggleNotifications: (date: string) => void
   onReorderTask: (date: string, taskId: string, targetIndex: number) => void
   onToggleActive: (date: string, taskId: string) => void
+  onAssignTask: (taskId: string) => void
   onShowDescription: (taskId: string) => void
   breadcrumbs: Record<string, string[]>
 }
@@ -57,6 +58,7 @@ export function DayTile({
   onToggleNotifications,
   onReorderTask,
   onToggleActive,
+  onAssignTask,
   onShowDescription,
   breadcrumbs,
 }: DayTileProps) {
@@ -86,6 +88,7 @@ export function DayTile({
   const showTaskLog = dayKind === 'today' || isPast
   const showReorder = variant !== 'month' && !isPast
   const showActivateToggle = variant === 'day' && isToday
+  const showTaskAssign = variant === 'day'
 
   return (
     <div className={tileClass}>
@@ -179,6 +182,11 @@ export function DayTile({
             {task.title}
           </button>
           <span className="t-actions">
+            {showTaskAssign && (
+              <button type="button" onClick={() => onAssignTask(task.taskId)} disabled={busy} title="Назначить на день">
+                📅
+              </button>
+            )}
             {showTaskEdit && (
               <button type="button" onClick={() => onEditTask(task.taskId, isoDate)} disabled={busy} title="Редактировать">
                 ✎

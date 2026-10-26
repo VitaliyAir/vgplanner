@@ -3,7 +3,6 @@ import type { MouseEvent } from 'react'
 import { getGoalBreadcrumb } from '../../api/goalsApi'
 import { ApiError } from '../../api/httpClient'
 import { changeTaskStatus, deleteTask, filterTasks, getTaskById, updateTask } from '../../api/tasksApi'
-import { scheduleTask } from '../../api/vdaysApi'
 import { VTaskStatus, type Priority, type TaskDetail, type TaskListItem } from '../../api/types'
 import { Modal } from '../../components/Modal'
 import { PriorityFlag } from '../../components/PriorityFlag'
@@ -138,19 +137,6 @@ export function TaskListView({ showDone }: TaskListViewProps) {
     setAssignTaskId(taskId)
   }
 
-  const handleAssignPick = async (isoDate: string) => {
-    const taskId = assignTaskId
-    setAssignTaskId(null)
-    if (!taskId) {
-      return
-    }
-    try {
-      await scheduleTask(isoDate, taskId)
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Не удалось назначить задачу на день')
-    }
-  }
-
   const handleAttachmentsChanged = (taskId: string, count: number) => {
     setTasks((prev) => prev?.map((t) => (t.id === taskId ? { ...t, attachmentCount: count } : t)) ?? prev)
   }
@@ -270,7 +256,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
         </ul>
       )}
 
-      {assignTaskId && <AssignDayModal taskId={assignTaskId} onPick={handleAssignPick} onCancel={() => setAssignTaskId(null)} />}
+      {assignTaskId && <AssignDayModal taskId={assignTaskId} onCancel={() => setAssignTaskId(null)} />}
 
       {descriptionTarget && (
         <Modal title="Описание задачи" onClose={() => setDescriptionTarget(null)}>

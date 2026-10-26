@@ -69,11 +69,11 @@ namespace VGoalsPlanner.API.Controllers
             return ToResponse(result);
         }
 
-        /// <summary>Задачи, отмеченные активными сегодня.</summary>
+        /// <summary>Задачи, отмеченные активными сегодня (date — локальная дата клиента).</summary>
         [HttpGet("active")]
-        public async Task<IActionResult> GetActive(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetActive([FromQuery] DateOnly? date, CancellationToken cancellationToken)
         {
-            var result = await _sender.Send(new GetActiveTasksQuery(), cancellationToken);
+            var result = await _sender.Send(new GetActiveTasksQuery(date), cancellationToken);
 
             return ToResponse(result);
         }

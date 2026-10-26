@@ -3,11 +3,12 @@ import { useAuth } from 'react-oidc-context'
 import { GoalsAndTaskView } from './features/goals-tree/GoalsAndTaskView'
 import { PlanningView } from './features/planning/PlanningView'
 import { HistoryView } from './features/history/HistoryView'
+import { StatisticsView } from './features/statistics/StatisticsView'
 import { LegendModal } from './components/LegendModal'
 import { NotificationAlerts } from './components/NotificationAlerts'
 import './App.css'
 
-type Tab = 'tree' | 'planning' | 'history'
+type Tab = 'tree' | 'planning' | 'history' | 'statistics'
 
 function App() {
   const [tab, setTab] = useState<Tab>('planning')
@@ -26,6 +27,9 @@ function App() {
           </button>
           <button type="button" className={tab === 'history' ? 'active' : ''} onClick={() => setTab('history')}>
             История
+          </button>
+          <button type="button" className={tab === 'statistics' ? 'active' : ''} onClick={() => setTab('statistics')}>
+            Статистика
           </button>
         </div>
 
@@ -48,6 +52,9 @@ function App() {
       </div>
       <div className={`app-tab-panel${tab === 'history' ? '' : ' hidden'}`}>
         <HistoryView />
+      </div>
+      <div className={`app-tab-panel${tab === 'statistics' ? '' : ' hidden'}`}>
+        <StatisticsView isActive={tab === 'statistics'} />
       </div>
 
       <NotificationAlerts />

@@ -1,6 +1,5 @@
 import { useReducer, useState } from 'react'
 import { changeTaskStatus, getTaskById, moveTask, updateTask, deleteTask } from '../../api/tasksApi'
-import { scheduleTask } from '../../api/vdaysApi'
 import { ApiError } from '../../api/httpClient'
 import type { GoalTaskSummary, TaskAttachment, TaskDetail } from '../../api/types'
 import { Modal } from '../../components/Modal'
@@ -43,7 +42,6 @@ type Action =
   | { type: 'DELETE_START' }
   | { type: 'DELETE_FAILURE'; error: string }
   | { type: 'MOVE_FAILURE'; error: string }
-  | { type: 'ASSIGN_DAY_FAILURE'; error: string }
   | { type: 'CLOSE' }
 
 const initialState: State = { mode: 'view', detail: null, busy: false, error: null }
@@ -67,8 +65,6 @@ function reducer(state: State, action: Action): State {
     case 'DELETE_FAILURE':
       return { ...state, busy: false, error: action.error }
     case 'MOVE_FAILURE':
-      return { ...state, error: action.error }
-    case 'ASSIGN_DAY_FAILURE':
       return { ...state, error: action.error }
     case 'CLOSE':
       return { ...state, mode: 'view' }
@@ -183,15 +179,6 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
     }
   }
 
-  const handleAssignDay = async (isoDate: string) => {
-    setAssignDayOpen(false)
-    try {
-      await scheduleTask(isoDate, task.id)
-    } catch (err) {
-      dispatch({ type: 'ASSIGN_DAY_FAILURE', error: err instanceof ApiError ? err.message : 'Не удалось назначить задачу на день' })
-    }
-  }
-
   return (
     <li className={`task-leaf ${taskStatusBackground(task.status)}`}>
       <PriorityFlag priority={task.priority} />
@@ -280,7 +267,7 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
         <GoalPickerModal title="Перенести задачу" allowRoot={false} onPick={handleMovePick} onCancel={() => setMovePickerOpen(false)} />
       )}
 
-      {assignDayOpen && <AssignDayModal taskId={task.id} onPick={handleAssignDay} onCancel={() => setAssignDayOpen(false)} />}
+      {assignDayOpen && <AssignDayModal taskId={task.id} onCancel={() => setAssignDayOpen(false)} />}
     </li>
   )
 }

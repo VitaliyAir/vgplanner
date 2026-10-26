@@ -32,6 +32,7 @@ builder.Services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<VG
 builder.Services.AddApplication();
 builder.Services.AddDependencies();
 builder.Services.AddVStorage(builder.Configuration);
+builder.Services.AddDailyStatisticsSnapshot(builder.Configuration);
 builder.Services.AddKeycloakAuthentication(builder.Configuration);
 builder.Services.AddKeycloakAuthorization(builder.Configuration);
 

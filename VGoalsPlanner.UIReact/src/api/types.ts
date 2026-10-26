@@ -272,6 +272,8 @@ export interface TimelineDay {
   date: string
   specialNote: string | null
   logs: TimelineLogEntry[]
+  // Снимок статистики на конец дня (ежедневное задание на сервере); null, если за этот день его нет.
+  statistics: Statistics | null
 }
 
 // StatisticsResponse.cs
@@ -290,6 +292,13 @@ export interface GoalStatistics {
 }
 
 export interface Statistics {
+  goals: GoalStatistics
+  tasks: StatusStatistics
+}
+
+// StatisticsHistoryRow (GET /api/statistics/history)
+export interface StatisticsHistoryRow {
+  date: string
   goals: GoalStatistics
   tasks: StatusStatistics
 }

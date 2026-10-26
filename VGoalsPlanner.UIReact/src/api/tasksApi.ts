@@ -42,9 +42,9 @@ export function reorderTasksInGoal(goalId: string, orderedTaskIds: string[]): Pr
   return apiPatch(`/vtasks/reorder`, { goalId, orderedTaskIds })
 }
 
-// GET /api/vtasks/active — задачи, отмеченные активными сегодня.
-export function getActiveTasks(): Promise<ActiveTask[]> {
-  return apiGet<ActiveTask[]>('/vtasks/active')
+// GET /api/vtasks/active?date= — задачи, отмеченные активными сегодня (date — локальная дата клиента, yyyy-MM-dd).
+export function getActiveTasks(date: string): Promise<ActiveTask[]> {
+  return apiGet<ActiveTask[]>(`/vtasks/active?date=${date}`)
 }
 
 export interface TaskFilters {

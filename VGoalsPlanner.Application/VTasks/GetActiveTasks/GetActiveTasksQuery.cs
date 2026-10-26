@@ -10,8 +10,9 @@ namespace VGoalsPlanner.Application.VTasks
     /// <summary>
     /// Задачи, отмеченные активными именно сегодня (VDayVTask.IsActive для VDay.Date == сегодня) —
     /// не исторический хвост из прошлых дней, которые никто не деактивировал.
+    /// Date — «сегодня» по часам клиента (его локальная дата); без неё берётся дата по UTC.
     /// </summary>
-    public sealed record GetActiveTasksQuery : IQuery<IReadOnlyList<ActiveTaskResponse>>;
+    public sealed record GetActiveTasksQuery(DateOnly? Date = null) : IQuery<IReadOnlyList<ActiveTaskResponse>>;
 
     internal sealed class GetActiveTasksQueryHandler : IQueryHandler<GetActiveTasksQuery, IReadOnlyList<ActiveTaskResponse>>
     {
@@ -26,7 +27,7 @@ namespace VGoalsPlanner.Application.VTasks
 
         public async Task<Result<IReadOnlyList<ActiveTaskResponse>>> Handle(GetActiveTasksQuery request, CancellationToken cancellationToken)
         {
-            var today = DateOnly.FromDateTime(DateTime.UtcNow);
+            var today = request.Date ?? DateOnly.FromDateTime(DateTime.UtcNow);
 
             var tasks = await (
                 from dt in _context.DayTasks.AsNoTracking()

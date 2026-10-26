@@ -5,6 +5,7 @@ import { changeTaskStatus, getActiveTasks, getTaskById, updateTask } from '../..
 import { ApiError } from '../../api/httpClient'
 import type { ActiveTask, DaySchedule, TaskDetail, VTaskStatus } from '../../api/types'
 import { Modal } from '../../components/Modal'
+import { AssignDayModal } from '../goals-tree/AssignDayModal'
 import { reorderToVisibleIndex } from '../../components/reorder'
 import { TaskAttachments } from '../../components/TaskAttachments'
 import { TaskDescriptionView } from '../../components/TaskDescriptionView'
@@ -57,6 +58,7 @@ export function PlanningView() {
   const [taskLogTarget, setTaskLogTarget] = useState<{ taskId: string; date: string; currentStatus: VTaskStatus } | null>(null)
   const [notificationsTarget, setNotificationsTarget] = useState<string | null>(null)
   const [openNotifDay, setOpenNotifDay] = useState<string | null>(null)
+  const [assignTaskId, setAssignTaskId] = useState<string | null>(null)
   const [descriptionTarget, setDescriptionTarget] = useState<TaskDetail | null>(null)
   const [breadcrumbs, setBreadcrumbs] = useState<Record<string, string[]>>({})
   const breadcrumbsRef = useRef(breadcrumbs)
@@ -100,7 +102,7 @@ export function PlanningView() {
   }, [scale, anchorDate])
 
   const loadActiveTasks = () => {
-    getActiveTasks()
+    getActiveTasks(toIsoDate(new Date()))
       .then((data) => {
         setActiveTasks(data)
         const missingGoalIds = Array.from(new Set(data.map((t) => t.goalId))).filter((id) => !(id in breadcrumbsRef.current))
@@ -297,6 +299,7 @@ export function PlanningView() {
         onToggleNotifications={handleToggleNotifications}
         onReorderTask={handleReorderTask}
         onToggleActive={handleToggleActive}
+        onAssignTask={setAssignTaskId}
         onShowDescription={handleShowDescription}
         breadcrumbs={breadcrumbs}
       />
@@ -362,6 +365,9 @@ export function PlanningView() {
                   <div className="active-task-title-row">
                     <div className="active-task-title">{task.title}</div>
                     <span className="active-task-actions">
+                      <button type="button" className="icon-button" onClick={() => setAssignTaskId(task.id)} title="Назначить на день">
+                        📅
+                      </button>
                       <button
                         type="button"
                         className="icon-button active-task-btn--edit"
@@ -393,6 +399,17 @@ export function PlanningView() {
       </div>
 
       {picker && <TaskPickerModal excludeTaskIds={(scheduleByDate.get(picker.date)?.tasks ?? []).map((t) => t.taskId)} onPick={handlePickTask} onCancel={() => setPicker(null)} />}
+
+      {assignTaskId && (
+        <AssignDayModal
+          taskId={assignTaskId}
+          onChanged={() => {
+            load(scale, anchorDate)
+            loadActiveTasks()
+          }}
+          onCancel={() => setAssignTaskId(null)}
+        />
+      )}
 
       {editing && (
         <Modal title="Редактировать задачу" persistent className="modal-panel--wide" onClose={() => setEditing(null)}>
