@@ -1,12 +1,12 @@
 import type { Statistics, VTaskStatus } from '../../api/types'
+import { CollapsibleSection } from '../../components/CollapsibleSection'
 import { TaskStatusIcon } from '../../components/TaskStatusIcon'
 import { TASK_STATUS_LABEL } from './labels'
 
 // Короткая статистика над списком последних задач: у целей — только всего, у задач — всего и по статусам.
 export function StatisticsSummary({ stats }: { stats: Statistics }) {
   return (
-    <div className="stats-summary">
-      <h2>Статистика</h2>
+    <CollapsibleSection title="Статистика" className="stats-summary">
       <div className="stats-summary-row stats-summary-row--main">
         <span>Цели</span>
         <b>{stats.goals.total}</b>
@@ -26,6 +26,6 @@ export function StatisticsSummary({ stats }: { stats: Statistics }) {
           </li>
         ))}
       </ul>
-    </div>
+    </CollapsibleSection>
   )
 }

@@ -65,6 +65,7 @@ export function PlanningView() {
   breadcrumbsRef.current = breadcrumbs
 
   const [activeTasks, setActiveTasks] = useState<ActiveTask[]>([])
+  const [activeStatus, setActiveStatus] = useState<'loading' | 'ok' | 'error'>('loading')
 
   const load = async (currentScale: Scale, currentAnchor: Date) => {
     setLoading(true)
@@ -105,6 +106,7 @@ export function PlanningView() {
     getActiveTasks(toIsoDate(new Date()))
       .then((data) => {
         setActiveTasks(data)
+        setActiveStatus('ok')
         const missingGoalIds = Array.from(new Set(data.map((t) => t.goalId))).filter((id) => !(id in breadcrumbsRef.current))
         missingGoalIds.forEach((goalId) => {
           getGoalBreadcrumb(goalId)
@@ -115,7 +117,7 @@ export function PlanningView() {
         })
       })
       .catch(() => {
-        // Блок "Активные задачи" необязателен — молча пропускаем неудачу.
+        setActiveStatus('error')
       })
   }
 
@@ -337,7 +339,7 @@ export function PlanningView() {
       {error && <p className="tree-error">{error}</p>}
 
       <div className="planning-layout">
-        <div className="planning-main">
+        <div className={`planning-main${scale === 'month' ? ' planning-main--month' : ''}`}>
           {scale === 'day' && <div className="day-scale-wrap">{renderTile(anchorDate, 'day')}</div>}
 
           {scale === 'week' && <div className="week-row">{visibleDates.map((d) => renderTile(d, 'week'))}</div>}
@@ -354,10 +356,23 @@ export function PlanningView() {
           )}
         </div>
 
-        {scale === 'day' && activeTasks.length > 0 && (
-          <aside className="active-tasks-section planning-active-tasks">
+        {scale === 'day' && (
+          <aside
+            className={`active-tasks-section planning-active-tasks${activeStatus === 'ok' && activeTasks.length > 0 ? '' : ' planning-active-tasks--empty'}`}
+          >
             <h2>Активные задачи</h2>
-            {activeTasks.map((task) => {
+            {activeStatus === 'loading' && <p className="planning-active-tasks-empty">Загрузка…</p>}
+            {activeStatus === 'error' && (
+              <p className="planning-active-tasks-empty">
+                Не удалось загрузить. <button type="button" onClick={loadActiveTasks}>Повторить</button>
+              </p>
+            )}
+            {activeStatus === 'ok' && activeTasks.length === 0 && (
+              <p className="planning-active-tasks-empty">
+                На сегодня нет активных задач. Включите переключатель «Активна» у задачи в плане дня.
+              </p>
+            )}
+            {activeStatus === 'ok' && activeTasks.map((task) => {
               const crumb = breadcrumbs[task.goalId]
               return (
                 <div key={task.id} className="active-task-item">

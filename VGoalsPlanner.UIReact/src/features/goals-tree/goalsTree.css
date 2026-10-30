@@ -62,6 +62,39 @@
   color: #444;
 }
 
+.fold-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.fold-chevron {
+  display: inline-block;
+  font-size: 0.8em;
+  transition: transform 0.15s;
+}
+
+.fold-section:not(.fold-section--closed) .fold-chevron {
+  transform: rotate(90deg);
+}
+
+.fold-section--closed h2 {
+  margin-bottom: 0;
+}
+
+.stats-summary.fold-section--closed {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
 .stats-summary {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
@@ -128,14 +161,6 @@
   gap: 0.3rem;
 }
 
-.view-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
 .view-switch {
   display: flex;
   gap: 4px;
@@ -147,12 +172,19 @@
 .view-switch button {
   border: none;
   background: transparent;
-  padding: 0.35rem 0.75rem;
+  padding: 0;
+  width: 2.25rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 6px;
-  font: inherit;
-  font-size: 0.85rem;
   cursor: pointer;
   color: #6b7280;
+}
+
+.view-switch button:not(.active):hover {
+  background: #f3f4f6;
 }
 
 .view-switch button.active {
@@ -281,9 +313,16 @@
 .goals-and-task-view-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
   margin-bottom: 1rem;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-left: auto;
 }
 
 .root-add-button {

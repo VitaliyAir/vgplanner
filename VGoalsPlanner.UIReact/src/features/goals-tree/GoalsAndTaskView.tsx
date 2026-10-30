@@ -3,6 +3,8 @@ import { createGoal, getGoalById, getRootGoals, reorderGoals } from '../../api/g
 import { ApiError } from '../../api/httpClient'
 import { VGoalStatus, type GoalListItem } from '../../api/types'
 import { Modal } from '../../components/Modal'
+import { ListViewIcon } from '../../components/icons/ListViewIcon'
+import { TreeViewIcon } from '../../components/icons/TreeViewIcon'
 import { reorderToVisibleIndex } from '../../components/reorder'
 import { GoalForm, type GoalFormValues } from './GoalForm'
 import { GoalTreeNode } from './GoalTreeNode'
@@ -125,29 +127,44 @@ export function GoalsAndTaskView({ isActive }: GoalsAndTaskViewProps) {
 
       <div className="goals-and-task-view">
         <div className="goals-and-task-view-header">
-          <h1>Цели и задачи</h1>
-          {!creatingRoot && (
-            <button type="button" className="root-add-button" onClick={() => setCreatingRoot(true)}>
-              <span className="add-btn add-btn--goal" aria-hidden="true">+</span>
-              <span>Новая цель</span>
-            </button>
-          )}
-        </div>
-
-        <div className="view-controls">
           <div className="view-switch">
-            <button type="button" className={viewMode === 'tree' ? 'active' : ''} onClick={() => setViewMode('tree')}>
-              Дерево
+            <button
+              type="button"
+              className={viewMode === 'tree' ? 'active' : ''}
+              onClick={() => setViewMode('tree')}
+              title="Дерево"
+              aria-label="Дерево"
+              aria-pressed={viewMode === 'tree'}
+            >
+              <TreeViewIcon />
             </button>
-            <button type="button" className={viewMode === 'list' ? 'active' : ''} onClick={() => setViewMode('list')}>
-              Список задач
+            <button
+              type="button"
+              className={viewMode === 'list' ? 'active' : ''}
+              onClick={() => setViewMode('list')}
+              title="Список задач"
+              aria-label="Список задач"
+              aria-pressed={viewMode === 'list'}
+            >
+              <ListViewIcon />
             </button>
           </div>
 
-          <label className="view-controls-checkbox">
-            <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} />
-            Показывать выполненные
-          </label>
+          <h1>Цели и задачи</h1>
+
+          <div className="header-right">
+            {!creatingRoot && (
+              <button type="button" className="root-add-button" onClick={() => setCreatingRoot(true)}>
+                <span className="add-btn add-btn--goal" aria-hidden="true">+</span>
+                <span>Новая цель</span>
+              </button>
+            )}
+
+            <label className="view-controls-checkbox">
+              <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} />
+              Показывать выполненные
+            </label>
+          </div>
         </div>
 
         {creatingRoot && (
