@@ -9,6 +9,7 @@ namespace VGoalsPlanner.Application.VTasks.Common
         public VTaskStatus Status { get; init; }
         public Priority Priority { get; init; }
         public VTaskType Type { get; init; }
+        public VTaskElaborationLevel ElaborationLevel { get; init; }
         public DateTime? Deadline { get; init; }
         public int OrderIndex { get; init; }
         public int CompletedPercent { get; init; }

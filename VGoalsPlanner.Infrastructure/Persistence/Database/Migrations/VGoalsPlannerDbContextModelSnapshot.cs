@@ -340,6 +340,11 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<int>("ElaborationLevel")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<int?>("EstimatedMinutes")
                         .HasColumnType("integer");
 

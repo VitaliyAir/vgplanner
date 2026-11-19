@@ -62,9 +62,12 @@ namespace VGoalsPlanner.API.Controllers
             [FromQuery] VTaskStatus? status,
             [FromQuery] Priority? priority,
             [FromQuery] bool regular = false,
+            [FromQuery] VTaskElaborationLevel? elaborationLevel = null,
             CancellationToken cancellationToken = default)
         {
-            var result = await _sender.Send(new FilterTasksQuery(title, tag, status, priority, regular), cancellationToken);
+            var result = await _sender.Send(
+                new FilterTasksQuery(title, tag, status, priority, regular, elaborationLevel),
+                cancellationToken);
 
             return ToResponse(result);
         }
@@ -97,6 +100,7 @@ namespace VGoalsPlanner.API.Controllers
                 request.Deadline,
                 request.Priority,
                 request.Type,
+                request.ElaborationLevel,
                 request.EstimatedMinutes,
                 request.Tags ?? Array.Empty<string>(),
                 request.RecurrenceDays,
@@ -122,6 +126,7 @@ namespace VGoalsPlanner.API.Controllers
                 request.Deadline,
                 request.Priority,
                 request.Type,
+                request.ElaborationLevel,
                 request.EstimatedMinutes,
                 request.Tags ?? Array.Empty<string>(),
                 request.RecurrenceDays,

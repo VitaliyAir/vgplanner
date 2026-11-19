@@ -45,6 +45,19 @@
   border-radius: 4px;
 }
 
+/* Версия UI · API: мелкая диагностическая подпись, красная при расхождении сборок. */
+.app-version {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.app-version--mismatch {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
 .app-tab-panel.hidden {
   display: none;
 }

@@ -80,6 +80,7 @@ namespace VGoalsPlanner.Application.VTasks
                 Status = task.Status,
                 Priority = task.Priority,
                 Type = task.Type,
+                ElaborationLevel = task.ElaborationLevel,
                 Deadline = task.Deadline,
                 StartedAt = task.StartedAt,
                 CompletedAt = task.CompletedAt,

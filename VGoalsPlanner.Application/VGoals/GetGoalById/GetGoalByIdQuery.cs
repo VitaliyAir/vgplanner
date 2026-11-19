@@ -55,6 +55,7 @@ namespace VGoalsPlanner.Application.VGoals
                     Id = t.Id,
                     Title = t.Title,
                     Status = t.Status,
+                    ElaborationLevel = t.ElaborationLevel,
                     Priority = t.Priority,
                     Deadline = t.Deadline,
                     Tags = t.Tags,

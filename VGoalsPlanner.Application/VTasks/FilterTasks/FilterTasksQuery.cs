@@ -19,7 +19,8 @@ namespace VGoalsPlanner.Application.VTasks
         string? Tag,
         VTaskStatus? Status,
         Priority? Priority,
-        bool RegularOnly) : IQuery<IReadOnlyList<TaskListItemResponse>>;
+        bool RegularOnly,
+        VTaskElaborationLevel? ElaborationLevel) : IQuery<IReadOnlyList<TaskListItemResponse>>;
 
     internal sealed class FilterTasksQueryHandler
         : IQueryHandler<FilterTasksQuery, IReadOnlyList<TaskListItemResponse>>
@@ -61,6 +62,11 @@ namespace VGoalsPlanner.Application.VTasks
                 query = query.Where(t => t.Type == VTaskType.Repeatable);
             }
 
+            if (request.ElaborationLevel.HasValue)
+            {
+                query = query.Where(t => t.ElaborationLevel == request.ElaborationLevel.Value);
+            }
+
             var candidates = await query
                 .OrderByDescending(t => t.UpdatedAt)
                 .Select(t => new TaskListItemResponse
@@ -70,6 +76,7 @@ namespace VGoalsPlanner.Application.VTasks
                     Status = t.Status,
                     Priority = t.Priority,
                     Type = t.Type,
+                    ElaborationLevel = t.ElaborationLevel,
                     Deadline = t.Deadline,
                     OrderIndex = t.OrderIndex,
                     CompletedPercent = t.CompletedPercent,

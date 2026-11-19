@@ -73,7 +73,6 @@ namespace VGoalsPlanner.Application.VTasks
                 SizeBytes = counting.BytesRead,
                 StorageKey = storageKey,
                 StorageObjectId = upload.Value,
-                CreatedBy = _currentUser.UserId,
                 CreatedAt = now,
                 UpdatedAt = now
             };

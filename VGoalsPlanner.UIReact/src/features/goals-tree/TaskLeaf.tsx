@@ -16,6 +16,7 @@ import { AssignDayModal } from './AssignDayModal'
 import { GoalPickerModal } from './GoalPickerModal'
 import { TaskForm, type TaskFormValues } from './TaskForm'
 import { TASK_STATUS_LABEL } from './labels'
+import { ElaborationIcon } from '../../components/icons/ElaborationIcon'
 
 type Mode = 'view' | 'edit' | 'details'
 type EditableMode = Exclude<Mode, 'view'>
@@ -29,7 +30,17 @@ interface State {
 
 type EditPatch = Pick<
   TaskDetail,
-  'title' | 'description' | 'deadline' | 'priority' | 'status' | 'type' | 'estimatedMinutes' | 'tags' | 'links' | 'recurrenceDays'
+  | 'title'
+  | 'description'
+  | 'deadline'
+  | 'priority'
+  | 'status'
+  | 'type'
+  | 'elaborationLevel'
+  | 'estimatedMinutes'
+  | 'tags'
+  | 'links'
+  | 'recurrenceDays'
 >
 
 type Action =
@@ -114,6 +125,7 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
       deadline: values.deadline,
       priority: values.priority,
       type: values.type,
+      elaborationLevel: values.elaborationLevel,
       estimatedMinutes: values.estimatedMinutes,
       tags: values.tags,
       links: values.links,
@@ -133,13 +145,21 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
         priority: values.priority,
         status: values.status,
         type: values.type,
+        elaborationLevel: values.elaborationLevel,
         estimatedMinutes: values.estimatedMinutes,
         tags: values.tags,
         links: values.links,
         recurrenceDays: values.recurrenceDays,
       },
     })
-    onChanged?.({ ...task, title: values.title, priority: values.priority, status: values.status, deadline: values.deadline })
+    onChanged?.({
+      ...task,
+      title: values.title,
+      priority: values.priority,
+      status: values.status,
+      deadline: values.deadline,
+      elaborationLevel: values.elaborationLevel,
+    })
   }
 
   const handleAttachmentsChanged = (attachments: TaskAttachment[]) => {
@@ -224,6 +244,7 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
       )}
 
       <div className="node-foot">
+        <ElaborationIcon level={task.elaborationLevel} size={11} />
         <span className={`pill pill-task-status-${task.status}`}>
           <TaskStatusIcon status={task.status} size={14} />
           {TASK_STATUS_LABEL[task.status]}
@@ -243,6 +264,7 @@ export function TaskLeaf({ task, onChanged, onDeleted, position }: TaskLeafProps
               priority: detail.priority,
               status: detail.status,
               type: detail.type,
+              elaborationLevel: detail.elaborationLevel,
               estimatedMinutes: detail.estimatedMinutes != null ? String(detail.estimatedMinutes) : '',
               tags: detail.tags.join(', '),
               links: detail.links,

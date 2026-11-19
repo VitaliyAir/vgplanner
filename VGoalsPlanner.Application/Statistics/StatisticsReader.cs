@@ -52,7 +52,10 @@ namespace VGoalsPlanner.Application.Statistics
                 TasksCancelled = Count(VTaskStatus.Cancelled),
                 CreatedAt = now,
                 UpdatedAt = now,
-                CreatedBy = userId
+                CreatedBy = userId,
+                // Снимок пишет фоновое задание в обход аудита контекста (там нет HTTP-пользователя),
+                // поэтому автора проставляем явно — как и CreatedBy.
+                UpdatedBy = userId
             };
         }
 

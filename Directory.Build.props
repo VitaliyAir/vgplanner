@@ -1,0 +1,20 @@
+<Project>
+
+  <!--
+    Версия backend'а (API, Application, Domain, Infrastructure). Источник истины —
+    VGoalsPlanner.API/version.txt: файл лежит в контексте сборки API, поэтому версия
+    одинаковая и локально, и в Docker-образе, без build-arg'ов.
+    Инкремент: scripts/bump-version.ps1 -Target api, релиз: scripts/release.ps1.
+    Значение попадает в AssemblyInformationalVersion (вместе с +<sha> коммита) и отдаётся
+    через GET /api/version.
+
+    Версия UI живёт отдельно: VGoalsPlanner.UIReact/version.txt (её читает vite.config.ts).
+  -->
+  <PropertyGroup>
+    <VersionFile Condition="'$(VersionFile)' == ''">$(MSBuildThisFileDirectory)VGoalsPlanner.API/version.txt</VersionFile>
+    <AppVersion Condition="Exists('$(VersionFile)')">$([System.IO.File]::ReadAllText('$(VersionFile)').Trim())</AppVersion>
+    <AppVersion Condition="'$(AppVersion)' == ''">0.0.0</AppVersion>
+    <Version>$(AppVersion)</Version>
+  </PropertyGroup>
+
+</Project>

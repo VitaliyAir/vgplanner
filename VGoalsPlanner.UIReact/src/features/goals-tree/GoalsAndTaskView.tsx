@@ -160,9 +160,12 @@ export function GoalsAndTaskView({ isActive }: GoalsAndTaskViewProps) {
               </button>
             )}
 
-            <label className="view-controls-checkbox">
+            <label
+              className="view-controls-checkbox"
+              title="Показывать задачи со статусом «Завершена» и «Отменена», а также завершённые цели"
+            >
               <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} />
-              Показывать выполненные
+              Показывать завершенные
             </label>
           </div>
         </div>

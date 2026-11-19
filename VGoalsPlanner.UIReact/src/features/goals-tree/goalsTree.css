@@ -543,6 +543,20 @@
   flex: 1 1 0;
 }
 
+/* Расшифровка выбранной степени проработанности под выпадающим списком. */
+.task-form-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Подпись поля «Проработанность» вместе с индикатором-превью. */
+.task-form-elaboration-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
 .priority-radio-group {
   display: flex;
   flex-wrap: wrap;
@@ -626,7 +640,9 @@
 
 .node-foot {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
+  gap: 0.3rem;
 }
 
 .task-leaf-tags {
@@ -660,6 +676,12 @@
 .pill-goal-status-5 {
   background: #dcfce7;
   color: #166534;
+}
+
+/* Индикатор степени проработанности (3 сегмента) — рядом со статусом в карточке. */
+.elaboration-icon {
+  flex: none;
+  vertical-align: -1px;
 }
 
 .pill-task-status-2 {
@@ -744,6 +766,13 @@
 
 .task-list-filter-input {
   flex: 1 1 180px;
+}
+
+/* Фильтр по проработанности: селект уровня + превью-иконка выбранного значения. */
+.task-list-filter-level {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .task-list-count {

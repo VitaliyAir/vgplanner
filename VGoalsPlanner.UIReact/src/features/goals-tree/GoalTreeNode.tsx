@@ -2,7 +2,7 @@ import { useReducer, useState } from 'react'
 import { createGoal, deleteGoal, getGoalById, moveGoal, reorderGoals, updateGoal } from '../../api/goalsApi'
 import { createTask, reorderTasksInGoal } from '../../api/tasksApi'
 import { ApiError } from '../../api/httpClient'
-import { VGoalStatus, VTaskStatus, type GoalDetail, type GoalListItem, type GoalTaskSummary } from '../../api/types'
+import { VGoalStatus, type GoalDetail, type GoalListItem, type GoalTaskSummary } from '../../api/types'
 import { MarkdownView } from '../../components/MarkdownView'
 import { Modal } from '../../components/Modal'
 import { PositionInput, type ListPosition } from '../../components/PositionInput'
@@ -16,6 +16,7 @@ import { TaskForm, type TaskFormValues } from './TaskForm'
 import { TaskLeaf } from './TaskLeaf'
 import { GOAL_STATUS_LABEL } from './labels'
 import { useShowDone } from './ShowDoneContext'
+import { isHiddenTaskStatus } from './taskVisibility'
 
 type Mode = 'view' | 'edit' | 'add-child' | 'add-task' | 'details'
 type EditableMode = Exclude<Mode, 'view'>
@@ -151,8 +152,9 @@ export function GoalTreeNode({ goal, onChanged, onDeleted, position }: GoalTreeN
   // Фильтрация по "показывать выполненные" — только для отображения, canExpand
   // (см. ниже) сознательно считается по несмфильтрованным данным, иначе стрелка
   // разворачивания то появлялась бы, то исчезала при переключении фильтра.
+  // Скрываются оба терминальных статуса задачи: «Завершена» и «Отменена».
   const visibleChildGoals = detail ? detail.childGoals.filter((g) => showDone || g.status !== VGoalStatus.Completed) : []
-  const visibleChildTasks = detail ? detail.childTasks.filter((t) => showDone || t.status !== VTaskStatus.Completed) : []
+  const visibleChildTasks = detail ? detail.childTasks.filter((t) => showDone || !isHiddenTaskStatus(t.status)) : []
 
   // У свежедобавленного (в этой же сессии) ребёнка родитель мог изначально
   // не показывать стрелку (hasChildGoals/hasChildTasks пришли из списка ДО
@@ -244,6 +246,7 @@ export function GoalTreeNode({ goal, onChanged, onDeleted, position }: GoalTreeN
       deadline: values.deadline,
       priority: values.priority,
       type: values.type,
+      elaborationLevel: values.elaborationLevel,
       estimatedMinutes: values.estimatedMinutes,
       tags: values.tags,
       links: values.links,

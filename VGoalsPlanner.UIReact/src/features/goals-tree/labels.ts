@@ -1,4 +1,4 @@
-import { Priority, VGoalStatus, VTaskStatus, VTaskType } from '../../api/types'
+import { ElaborationLevel, Priority, VGoalStatus, VTaskStatus, VTaskType } from '../../api/types'
 
 export const PRIORITY_LABEL: Record<Priority, string> = {
   [Priority.Low]: 'Низкий',
@@ -37,6 +37,36 @@ export const TASK_TYPE_LABEL: Record<VTaskType, string> = {
 }
 
 export const TASK_TYPE_OPTIONS: VTaskType[] = [VTaskType.Normal, VTaskType.Repeatable]
+
+// Степень проработанности задачи (VTaskElaborationLevel.cs): подпись в выпадающем списке,
+// краткая метка в карточке и расшифровка «что это значит» в подсказке.
+export const ELABORATION_LEVEL_LABEL: Record<ElaborationLevel, string> = {
+  [ElaborationLevel.Reminder]: 'Напоминание (0–30%)',
+  [ElaborationLevel.Research]: 'Исследование (30–70%)',
+  [ElaborationLevel.Actionable]: 'Готова к работе (70–90%)',
+  [ElaborationLevel.Detailed]: 'Детально проработана (90–100%)',
+}
+
+export const ELABORATION_LEVEL_SHORT: Record<ElaborationLevel, string> = {
+  [ElaborationLevel.Reminder]: 'Reminder',
+  [ElaborationLevel.Research]: 'Research',
+  [ElaborationLevel.Actionable]: 'Actionable',
+  [ElaborationLevel.Detailed]: 'Detailed',
+}
+
+export const ELABORATION_LEVEL_HINT: Record<ElaborationLevel, string> = {
+  [ElaborationLevel.Reminder]: 'Идея, ссылки, черновик (0–30%)',
+  [ElaborationLevel.Research]: 'Нужно изучить, найти, уточнить (30–70%)',
+  [ElaborationLevel.Actionable]: 'Готова к работе: есть понятные шаги (70–90%)',
+  [ElaborationLevel.Detailed]: 'Детально проработана: шаги + оценка + ресурсы (90–100%)',
+}
+
+export const ELABORATION_LEVEL_OPTIONS: ElaborationLevel[] = [
+  ElaborationLevel.Reminder,
+  ElaborationLevel.Research,
+  ElaborationLevel.Actionable,
+  ElaborationLevel.Detailed,
+]
 
 export const TASK_STATUS_OPTIONS: VTaskStatus[] = [
   VTaskStatus.New,

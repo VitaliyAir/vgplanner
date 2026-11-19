@@ -3,7 +3,7 @@ import type { MouseEvent } from 'react'
 import { getGoalBreadcrumb } from '../../api/goalsApi'
 import { ApiError } from '../../api/httpClient'
 import { changeTaskStatus, deleteTask, filterTasks, getTaskById, updateTask } from '../../api/tasksApi'
-import { VTaskStatus, type Priority, type TaskDetail, type TaskListItem } from '../../api/types'
+import { VTaskStatus, type ElaborationLevel, type Priority, type TaskDetail, type TaskListItem } from '../../api/types'
 import { Modal } from '../../components/Modal'
 import { PriorityFlag } from '../../components/PriorityFlag'
 import { TaskAttachments } from '../../components/TaskAttachments'
@@ -14,7 +14,10 @@ import { taskStatusBackground } from '../../components/taskStatusBackground'
 import { TrashIcon } from '../../components/icons/TrashIcon'
 import { AssignDayModal } from './AssignDayModal'
 import { PRIORITY_LABEL, PRIORITY_OPTIONS, TASK_STATUS_LABEL, TASK_STATUS_OPTIONS } from './labels'
+import { ELABORATION_LEVEL_LABEL, ELABORATION_LEVEL_OPTIONS } from './labels'
+import { ElaborationIcon } from '../../components/icons/ElaborationIcon'
 import { TaskForm, type TaskFormValues } from './TaskForm'
+import { isHiddenTaskStatus } from './taskVisibility'
 
 const DEBOUNCE_MS = 300
 
@@ -27,6 +30,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
   const [tagFilter, setTagFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState<VTaskStatus | ''>('')
   const [priorityFilter, setPriorityFilter] = useState<Priority | ''>('')
+  const [elaborationFilter, setElaborationFilter] = useState<ElaborationLevel | ''>('')
   const [regularOnly, setRegularOnly] = useState(false)
 
   const [tasks, setTasks] = useState<TaskListItem[] | null>(null)
@@ -48,6 +52,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
         tag: tagFilter || undefined,
         status: statusFilter === '' ? undefined : statusFilter,
         priority: priorityFilter === '' ? undefined : priorityFilter,
+        elaborationLevel: elaborationFilter === '' ? undefined : elaborationFilter,
         regular: regularOnly || undefined,
       })
         .then((data) => {
@@ -85,7 +90,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
       cancelled = true
       clearTimeout(timeout)
     }
-  }, [titleFilter, tagFilter, statusFilter, priorityFilter, regularOnly])
+  }, [titleFilter, tagFilter, statusFilter, priorityFilter, elaborationFilter, regularOnly])
 
   const handleRowClick = async (taskId: string) => {
     try {
@@ -116,6 +121,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
       deadline: values.deadline,
       priority: values.priority,
       type: values.type,
+      elaborationLevel: values.elaborationLevel,
       estimatedMinutes: values.estimatedMinutes,
       tags: values.tags,
       links: values.links,
@@ -126,7 +132,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
     }
     setTasks((prev) =>
       prev?.map((t) =>
-        t.id === editing.id ? { ...t, title: values.title, priority: values.priority, status: values.status, deadline: values.deadline } : t,
+        t.id === editing.id ? { ...t, title: values.title, priority: values.priority, status: values.status, deadline: values.deadline, elaborationLevel: values.elaborationLevel } : t,
       ) ?? prev,
     )
     setEditing(null)
@@ -155,9 +161,10 @@ export function TaskListView({ showDone }: TaskListViewProps) {
     }
   }
 
-  // "Показывать выполненные" снято — завершённые задачи скрываем; явный фильтр по статусу "Завершена" важнее галочки.
+  // "Показывать выполненные" снято — скрываем оба терминальных статуса; явный фильтр по
+  // статусу «Завершена»/«Отменена» важнее галочки (иначе такой фильтр давал бы пустой список).
   const visibleTasks =
-    tasks?.filter((t) => showDone || statusFilter === VTaskStatus.Completed || t.status !== VTaskStatus.Completed) ?? null
+    tasks?.filter((t) => showDone || statusFilter === t.status || !isHiddenTaskStatus(t.status)) ?? null
 
   return (
     <div className="task-list-view">
@@ -200,6 +207,22 @@ export function TaskListView({ showDone }: TaskListViewProps) {
             </option>
           ))}
         </select>
+        <div className="task-list-filter-level">
+          <select
+            className="task-list-filter-select"
+            value={elaborationFilter}
+            onChange={(e) => setElaborationFilter(e.target.value === '' ? '' : (Number(e.target.value) as ElaborationLevel))}
+            title="Степень проработанности"
+          >
+            <option value="">Все уровни</option>
+            {ELABORATION_LEVEL_OPTIONS.map((option) => (
+              <option key={option} value={option}>
+                {ELABORATION_LEVEL_LABEL[option]}
+              </option>
+            ))}
+          </select>
+          {elaborationFilter !== '' && <ElaborationIcon level={elaborationFilter} size={13} />}
+        </div>
         <label className="task-list-filter-checkbox">
           <input type="checkbox" checked={regularOnly} onChange={(e) => setRegularOnly(e.target.checked)} />
           Регулярные
@@ -223,6 +246,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
                   {crumb && crumb.length > 0 && <div className="recent-task-breadcrumb">{crumb.join(' › ')}</div>}
                   <div className="task-list-row-title">{task.title}</div>
                   <div className="task-list-row-pills">
+                    <ElaborationIcon level={task.elaborationLevel} size={11} />
                     <span className={`pill pill-task-status-${task.status}`}>
                       <TaskStatusIcon status={task.status} size={14} />
                       {TASK_STATUS_LABEL[task.status]}
@@ -279,6 +303,7 @@ export function TaskListView({ showDone }: TaskListViewProps) {
               priority: editing.priority,
               status: editing.status,
               type: editing.type,
+              elaborationLevel: editing.elaborationLevel,
               estimatedMinutes: editing.estimatedMinutes != null ? String(editing.estimatedMinutes) : '',
               tags: editing.tags.join(', '),
               links: editing.links,

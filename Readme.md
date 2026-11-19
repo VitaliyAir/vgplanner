@@ -115,6 +115,54 @@ npm run dev
 машинах Node резолвит `localhost` только в IPv6 (`::1`), из-за чего порт
 становится недоступен по IPv4.
 
+## Версия и релиз
+
+У API и у UI **свои версии** (обе — строки `MAJOR.MINOR.PATCH`):
+
+| Компонент | Файл версии | Кто читает | Где видно |
+|---|---|---|---|
+| API (и весь backend) | `VGoalsPlanner.API/version.txt` | `Directory.Build.props` | `GET /api/version` → `{ version, commit, builtAt, environment }` |
+| UI | `VGoalsPlanner.UIReact/version.txt` | `vite.config.ts` (вшивается в бандл) | подпись в шапке |
+
+Файлы лежат внутри своих build-контекстов, поэтому версия корректна и локально,
+и в Docker-образе без build-arg'ов. В шапке — `UI 1.0.2 · API 1.0.2`; если UI и
+API разной версии, подпись красная — значит, на стенд уехал только один образ.
+
+```bash
+scripts/bump-version.ps1                 # обе версии: 1.0.2 -> 1.0.3
+scripts/bump-version.ps1 -Target ui      # только UI
+scripts/bump-version.ps1 -Target api -Part minor
+scripts/release.ps1                      # bump обеих + сборка обоих образов + DevOps/vapps-<версия>.tar
+scripts/release.ps1 -Target ui           # релиз только UI: архив vapps-api1.0.2-ui1.0.3.tar
+```
+
+`release.ps1` собирает нужные образы, ставит теги `latest` и `:<версия>`,
+проставляет labels `org.opencontainers.image.version/revision` и печатает готовые
+команды `scp`/`docker load`/`docker compose up` для сервера. Проверка после
+деплоя:
+
+```bash
+curl -s https://<стенд>/api/version
+```
+
+`/api/version` открыт анонимно и отдаёт ещё и `environment` (`Docker` /
+`Production`), так что им же проверяется, что API стартовал в нужном окружении.
+
+## Фоновые задания
+
+Quartz (in-memory store, без собственных таблиц), настройки — в `appsettings.json`:
+
+| Секция | Задание | Расписание по умолчанию |
+|---|---|---|
+| `DailyStatisticsSnapshot` | снимок статистики на конец дня (`VDayStatistics`) | ежедневно 23:55, `Enabled` |
+| `AuditRecycle` | ротация журнала аудита (`AuditLogs`) | 1-го числа каждого месяца, 03:00 |
+
+`AuditRecycle:RecycleAudit` (по умолчанию `true`) — хранить аудит «по кругу»:
+записи старше `MaxDaysAuditRecordLifecycle` дней (по умолчанию 365) удаляются
+раз в месяц. При `false` задание не планируется вовсе, журнал копится целиком.
+Удаление идёт пакетами по 10 000 через `ExecuteDeleteAsync`, поэтому сама чистка
+не пишет новых записей аудита.
+
 ## Текущий статус
 
 **Готово:** домен и EF-конфигурации для всех сущностей, миграции; полный

@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using VGoalsPlanner.Domain.Entities;
+using VGoalsPlanner.Domain.Enums;
 
 namespace VGoalsPlanner.Infrastructure.Persistence.Database.Configurations
 {
@@ -31,6 +32,11 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database.Configurations
 
             builder.Property(e => e.Status)
                 .IsRequired();
+
+            // Степень проработанности: 0 (Reminder) — значение по умолчанию для уже существующих задач.
+            builder.Property(e => e.ElaborationLevel)
+                .IsRequired()
+                .HasDefaultValue(VTaskElaborationLevel.Reminder);
 
             builder.Property(e => e.Tags)
                 .HasColumnType("jsonb") // для PostgreSQL

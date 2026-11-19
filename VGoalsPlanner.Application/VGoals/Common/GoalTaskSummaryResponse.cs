@@ -7,6 +7,7 @@ namespace VGoalsPlanner.Application.VGoals.Common
         public Guid Id { get; init; }
         public required string Title { get; init; }
         public VTaskStatus Status { get; init; }
+        public VTaskElaborationLevel ElaborationLevel { get; init; }
         public Priority Priority { get; init; }
         public DateTime? Deadline { get; init; }
         public IReadOnlyList<string> Tags { get; init; } = Array.Empty<string>();

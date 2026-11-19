@@ -1,5 +1,5 @@
 import { apiDelete, apiGet, apiPatch, apiPost, apiPut } from './httpClient'
-import type { ActiveTask, CreateTaskRequest, PagedResult, Priority, TaskDetail, TaskListItem, UpdateTaskRequest, VTaskStatus } from './types'
+import type { ActiveTask, CreateTaskRequest, ElaborationLevel, PagedResult, Priority, TaskDetail, TaskListItem, UpdateTaskRequest, VTaskStatus } from './types'
 
 // GET /api/vtasks/{id} — полная задача (используем только для префилла формы).
 export function getTaskById(id: string): Promise<TaskDetail> {
@@ -53,6 +53,7 @@ export interface TaskFilters {
   status?: VTaskStatus
   priority?: Priority
   regular?: boolean
+  elaborationLevel?: ElaborationLevel
 }
 
 // GET /api/vtasks/filter — полный список задач с независимыми фильтрами, без пагинации.
@@ -69,6 +70,9 @@ export function filterTasks(filters: TaskFilters): Promise<TaskListItem[]> {
   }
   if (filters.priority !== undefined) {
     params.set('priority', String(filters.priority))
+  }
+  if (filters.elaborationLevel !== undefined) {
+    params.set('elaborationLevel', String(filters.elaborationLevel))
   }
   if (filters.regular) {
     params.set('regular', 'true')

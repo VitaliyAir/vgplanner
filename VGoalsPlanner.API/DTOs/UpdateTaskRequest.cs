@@ -10,6 +10,7 @@ namespace VGoalsPlanner.API.DTOs
         public DateTime? Deadline { get; init; }
         public Priority Priority { get; init; }
         public VTaskType Type { get; init; }
+        public VTaskElaborationLevel ElaborationLevel { get; init; }
         public int? EstimatedMinutes { get; init; }
         public string[]? Tags { get; init; }
         public int RecurrenceDays { get; init; }

@@ -4,6 +4,7 @@ import { PriorityFlag } from '../../components/PriorityFlag'
 import { TaskStatusIcon } from '../../components/TaskStatusIcon'
 import { taskStatusBackground } from '../../components/taskStatusBackground'
 import { TASK_STATUS_LABEL } from '../goals-tree/labels'
+import { ElaborationIcon } from '../../components/icons/ElaborationIcon'
 import { TrashIcon } from '../../components/icons/TrashIcon'
 import { TaskLogIcon } from '../../components/icons/TaskLogIcon'
 
@@ -217,6 +218,7 @@ export function DayTile({
           </span>
           {variant !== 'month' && (
             <div className="t-foot">
+              <ElaborationIcon level={task.elaborationLevel} size={10} />
               <span className={`pill pill-task-status-${task.status}`}>
                 <TaskStatusIcon status={task.status} size={14} />
                 {TASK_STATUS_LABEL[task.status]}

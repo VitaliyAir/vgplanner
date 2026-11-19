@@ -1,4 +1,4 @@
-﻿using VGoalsPlanner.Domain.Enums;
+using VGoalsPlanner.Domain.Enums;
 
 namespace VGoalsPlanner.Domain.Entities
 {
@@ -34,6 +34,12 @@ namespace VGoalsPlanner.Domain.Entities
 
         /// <summary>Текущий статус (обязательный, по умолчанию New)</summary>
         public VTaskStatus Status { get; set; } = VTaskStatus.New;
+
+        /// <summary>
+        /// Степень проработанности задачи (обязательная, по умолчанию Reminder):
+        /// 0 — идея/черновик, 1 — нужно изучить, 2 — готова к работе, 3 — детально проработана.
+        /// </summary>
+        public VTaskElaborationLevel ElaborationLevel { get; set; } = VTaskElaborationLevel.Reminder;
 
         /// <summary>Массив тегов для категоризации и поиска (хранится как JSONB)</summary>
         public string[] Tags { get; set; } = Array.Empty<string>();

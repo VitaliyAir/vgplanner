@@ -17,6 +17,7 @@ namespace VGoalsPlanner.Application.VTasks
         DateTime? Deadline,
         Priority Priority,
         VTaskType Type,
+        VTaskElaborationLevel ElaborationLevel,
         int? EstimatedMinutes,
         string[] Tags,
         int RecurrenceDays,
@@ -30,6 +31,7 @@ namespace VGoalsPlanner.Application.VTasks
             RuleFor(x => x.Description).MaximumLength(2000);
             RuleFor(x => x.Priority).IsInEnum();
             RuleFor(x => x.Type).IsInEnum();
+            RuleFor(x => (int)x.ElaborationLevel).InclusiveBetween(0, 3).WithMessage("Степень проработанности должна быть от 0 до 3");
             RuleFor(x => x.RecurrenceDays).InclusiveBetween(0, VGoalsPlanner.Domain.Enums.RecurrenceDays.All);
             RuleFor(x => x.EstimatedMinutes).GreaterThanOrEqualTo(0).When(x => x.EstimatedMinutes.HasValue);
             RuleFor(x => x.Tags).Must(t => t.Length <= 20).WithMessage("Не более 20 тегов");
@@ -65,6 +67,7 @@ namespace VGoalsPlanner.Application.VTasks
             task.Deadline = request.Deadline;
             task.Priority = request.Priority;
             task.Type = request.Type;
+            task.ElaborationLevel = request.ElaborationLevel;
             task.EstimatedMinutes = request.EstimatedMinutes;
             task.Tags = request.Tags ?? Array.Empty<string>();
             if (request.Links is not null)

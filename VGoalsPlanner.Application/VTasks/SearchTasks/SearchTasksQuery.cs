@@ -66,6 +66,7 @@ namespace VGoalsPlanner.Application.VTasks
                     Status = t.Status,
                     Priority = t.Priority,
                     Type = t.Type,
+                    ElaborationLevel = t.ElaborationLevel,
                     Deadline = t.Deadline,
                     OrderIndex = t.OrderIndex,
                     CompletedPercent = t.CompletedPercent,

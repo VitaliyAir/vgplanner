@@ -40,6 +40,15 @@ export const VTaskType = {
 } as const
 export type VTaskType = (typeof VTaskType)[keyof typeof VTaskType]
 
+// VTaskElaborationLevel.cs — степень проработанности задачи: 0 (идея) … 3 (детально проработана)
+export const ElaborationLevel = {
+  Reminder: 0,
+  Research: 1,
+  Actionable: 2,
+  Detailed: 3,
+} as const
+export type ElaborationLevel = (typeof ElaborationLevel)[keyof typeof ElaborationLevel]
+
 export const TaskLinkKind = {
   Url: 0,
   Path: 1,
@@ -70,6 +79,7 @@ export interface GoalTaskSummary {
   id: string
   title: string
   status: VTaskStatus
+  elaborationLevel: ElaborationLevel
   priority: Priority
   deadline: string | null
   tags: string[]
@@ -119,6 +129,7 @@ export interface TaskDetail {
   title: string
   description: string | null
   status: VTaskStatus
+  elaborationLevel: ElaborationLevel
   priority: Priority
   type: VTaskType
   deadline: string | null
@@ -147,6 +158,7 @@ export interface CreateTaskRequest {
   deadline?: string | null
   priority: Priority
   type: VTaskType
+  elaborationLevel: ElaborationLevel
   estimatedMinutes?: number | null
   tags?: string[]
   links?: TaskLink[]
@@ -160,6 +172,7 @@ export interface UpdateTaskRequest {
   deadline?: string | null
   priority: Priority
   type: VTaskType
+  elaborationLevel: ElaborationLevel
   estimatedMinutes?: number | null
   tags?: string[]
   links?: TaskLink[]
@@ -188,6 +201,7 @@ export interface TaskListItem {
   id: string
   title: string
   status: VTaskStatus
+  elaborationLevel: ElaborationLevel
   priority: Priority
   type: VTaskType
   deadline: string | null
@@ -203,6 +217,7 @@ export interface ScheduledTask {
   taskId: string
   title: string
   status: VTaskStatus
+  elaborationLevel: ElaborationLevel
   priority: Priority
   type: VTaskType
   goalId: string
@@ -301,4 +316,12 @@ export interface StatisticsHistoryRow {
   date: string
   goals: GoalStatistics
   tasks: StatusStatistics
+}
+
+// VersionResponse (GET /api/version) — версия, коммит и время сборки запущенного API.
+export interface AppVersion {
+  version: string
+  commit: string | null
+  builtAt: string
+  environment: string
 }

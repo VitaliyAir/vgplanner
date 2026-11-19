@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { ApiError } from '../../api/httpClient'
-import { Priority, VTaskStatus, VTaskType } from '../../api/types'
+import { ElaborationLevel, Priority, VTaskStatus, VTaskType } from '../../api/types'
 import type { TaskAttachment, TaskLink } from '../../api/types'
 import { MarkdownEditor } from '../../components/MarkdownEditor'
 import { PriorityDotsPicker } from '../../components/PriorityDotsPicker'
@@ -9,6 +9,8 @@ import { TaskAttachments } from '../../components/TaskAttachments'
 import { TaskLinksEditor } from '../../components/TaskLinksEditor'
 import { TaskStatusIcon } from '../../components/TaskStatusIcon'
 import { TASK_STATUS_LABEL, TASK_STATUS_OPTIONS, WEEKDAY_OPTIONS } from './labels'
+import { ELABORATION_LEVEL_HINT, ELABORATION_LEVEL_LABEL, ELABORATION_LEVEL_OPTIONS } from './labels'
+import { ElaborationIcon } from '../../components/icons/ElaborationIcon'
 
 const ALL_WEEKDAYS = 127
 
@@ -19,6 +21,7 @@ export interface TaskFormValues {
   priority: Priority
   status: VTaskStatus
   type: VTaskType
+  elaborationLevel: ElaborationLevel
   estimatedMinutes: number | null
   tags: string[]
   links: TaskLink[]
@@ -32,6 +35,7 @@ interface TaskFormInitialValues {
   priority: Priority
   status: VTaskStatus
   type: VTaskType
+  elaborationLevel: ElaborationLevel
   estimatedMinutes: string
   tags: string
   links: TaskLink[]
@@ -59,6 +63,7 @@ const EMPTY_VALUES: TaskFormInitialValues = {
   priority: Priority.Low,
   status: VTaskStatus.New,
   type: VTaskType.Normal,
+  elaborationLevel: ElaborationLevel.Reminder,
   estimatedMinutes: '',
   tags: '',
   links: [],
@@ -74,6 +79,7 @@ export function TaskForm({ initialValues, attachments, submitLabel, onSubmit, on
   const [priority, setPriority] = useState<Priority>(values.priority)
   const [status, setStatus] = useState<VTaskStatus>(values.status)
   const [type, setType] = useState<VTaskType>(values.type)
+  const [elaborationLevel, setElaborationLevel] = useState<ElaborationLevel>(values.elaborationLevel)
   const [estimatedMinutes, setEstimatedMinutes] = useState(values.estimatedMinutes)
   const [tags, setTags] = useState(values.tags)
   const [links, setLinks] = useState<TaskLink[]>(values.links)
@@ -116,6 +122,7 @@ export function TaskForm({ initialValues, attachments, submitLabel, onSubmit, on
       priority,
       status,
       type,
+      elaborationLevel,
       estimatedMinutes: minutes,
       tags: tags
         .split(',')
@@ -187,6 +194,26 @@ export function TaskForm({ initialValues, attachments, submitLabel, onSubmit, on
             </select>
           </label>
         )}
+      </div>
+
+      <div className="goal-form-field">
+        <label htmlFor="task-form-elaboration" className="task-form-elaboration-label">
+          Проработанность
+          <ElaborationIcon level={elaborationLevel} size={11} />
+        </label>
+        <select
+          id="task-form-elaboration"
+          value={elaborationLevel}
+          onChange={(event) => setElaborationLevel(Number(event.target.value) as ElaborationLevel)}
+          disabled={submitting}
+        >
+          {ELABORATION_LEVEL_OPTIONS.map((option) => (
+            <option key={option} value={option}>
+              {ELABORATION_LEVEL_LABEL[option]}
+            </option>
+          ))}
+        </select>
+        <p className="task-form-hint">{ELABORATION_LEVEL_HINT[elaborationLevel]}</p>
       </div>
 
       <div className="goal-form-row">

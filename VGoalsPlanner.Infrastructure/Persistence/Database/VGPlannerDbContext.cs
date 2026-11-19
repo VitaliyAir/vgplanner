@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Text.Json;
 using VGoalsPlanner.Application.Abstractions.Data;
@@ -89,9 +89,46 @@ namespace VGoalsPlanner.Infrastructure.Persistence.Database
                 }
             }
 
+            // Автор изменения проставляется после сбора диффа, чтобы служебные поля
+            // (CreatedBy/UpdatedBy) не попадали в ChangesJson каждого апдейта.
+            ApplyAuditAuthors();
+
             var baseSaveChanges = await base.SaveChangesAsync(cancellationToken);
 
             return baseSaveChanges;
+        }
+
+        /// <summary>
+        /// Проставляет автора изменения в <see cref="AuditableEntity"/>:
+        /// CreatedBy — кто создал запись, UpdatedBy — кто последним её изменил (при вставке совпадает с CreatedBy,
+        /// как и UpdatedAt совпадает с CreatedAt). Требует HTTP-контекста: в фоновых заданиях сохранение идёт
+        /// в обход этого метода (см. DailyStatisticsSnapshotJob), поэтому там автор задаётся явно.
+        /// </summary>
+        private void ApplyAuditAuthors()
+        {
+            var changedEntries = ChangeTracker.Entries<AuditableEntity>()
+                .Where(e => e.State is EntityState.Added or EntityState.Modified)
+                .ToList();
+
+            if (changedEntries.Count == 0)
+            {
+                return;
+            }
+
+            var userId = _currentUser.UserId;
+
+            foreach (var entry in changedEntries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedBy = userId;
+                    entry.Entity.UpdatedBy = userId;
+                }
+                else
+                {
+                    entry.Entity.UpdatedBy = userId;
+                }
+            }
         }
 
         /// <summary>
