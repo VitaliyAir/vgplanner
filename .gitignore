@@ -18,3 +18,4 @@ appsettings.Local.json
 # OS
 Thumbs.db
 .DS_Store
+promts_history.txt
